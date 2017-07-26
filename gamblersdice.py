@@ -20,14 +20,20 @@ class FallacyDie(object):
         rolls since it last occurred.
         """
         total_rolls = sum(self._rolls_since_last_hit)
-        probs = [r / float(total_rolls) for r in self._rolls_since_last_hit]
+        probs = self._rolls_since_last_hit / float(total_rolls)
         return probs
 
     def _update_roll_counter(self, result):
+        """
+        Increment each side's roll count, except for the most recent roll which
+        is set back to 1.
+        """
         self._rolls_since_last_hit += 1
         self._rolls_since_last_hit[result] = 1
+        return None
 
     def roll(self):
+        """ Roll the die and return the result. """
         result = np.random.choice(
             range(self.sides),
             p=self._weights
